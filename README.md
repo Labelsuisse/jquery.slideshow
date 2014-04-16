@@ -11,11 +11,9 @@ $('#content').slideshow([options{}]);
 Using:
 ```
 <div id="slideshow">
-    <ul>
-        <li><a href=""><img src="" alt="" title=""></a></li>
-        <li><a href=""><img src="" alt="" title=""></a></li>
-        <li><a href=""><img src="" alt="" title=""></a></li>
-    </ul>
+    <a href="#"><img src="images/image1.jpg" alt="1" title="Une première image"></a>
+    <a href="#"><img src="images/image2.jpg" alt="2" title="Une deuxième image"></a>
+    <a href="#"><img src="images/image3.jpg" alt="3" title="Une troisième image"></a>
 </div>
 <script>
     $(function () {
@@ -29,34 +27,35 @@ Default options:
 {
     markerCurrentBgColor: 'rgb(3, 106, 191)',
     resizeImage : false,
-    contentCss : {
+    containerStyle : {
         position: "relative",
         border: "3px solid #F2F2F2"
     },
 
-    titleCss : {
+    titleStyle : {
         position: 'absolute',
         textAlign: 'center',
         color: '#fff',
         background: 'rgba(0, 0, 0, .3)',
         bottom: 10,
         height: 30,
-        width: '100%'
+        width: '100%',
+        paddingTop: 5
     },
 
-    imageCss : {
+    imageStyle : {
         textAlign: 'center',
-        color: '#fff',
+        backgroundColor: '#fff',
     },
 
-    markerCss : {
+    markerStyle : {
         position: "absolute",
         right: 5,
         bottom: 7,
         zIndex: 10,
     },
 
-    pointCss : {
+    pointStyle : {
         display: 'inline-block',
         margin: '0px 1px',
         borderRadius: 5,
@@ -66,14 +65,16 @@ Default options:
         cursor: 'pointer'
     },
 
-    btnCss : {
-            width: 30,
-            height: 20,
+    btnStyle : {
+            width: 20,
+            height: 50,
+            borderRadius: 3,
             position: "absolute",
             background: "rgba(150, 150, 150, .7)",
             color: "#fff",
             cursor: "pointer",
             textAlign: "center",
+            fontSize: "1.3em",
             zIndex: 100
     }
 }
@@ -81,6 +82,5 @@ Default options:
 
 Screenshot:
 ![Screenshot](/screenshot.png "Screenshot")
-<small>&copy; photo credit: http://aurumlight.com/</small>
 
 enjoy!!!
