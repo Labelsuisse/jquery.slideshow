@@ -81,5 +81,6 @@ Default options:
 
 Screenshot:
 ![Screenshot](/screenshot.png "Screenshot")
+<small>&copy; photo credit: http://aurumlight.com/</small>
 
 enjoy!!!
