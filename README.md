@@ -79,6 +79,6 @@ markerCurrentBgColor: 'rgb(3, 106, 191)',
 ```
 
 Screenshot:
-![Screenshot](https://github.com/Labelsuisse/jquery.slideshow/screenshot.png "Screenshot")
+![Screenshot](https://github.com/Labelsuisse/jquery.slideshow/master/screenshot.png "Screenshot")
 
 enjoy!!!
