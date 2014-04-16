@@ -1,7 +1,7 @@
 /**
  * Plugin Simpe Slide Show for jquery
  * Author: Labelsuisse
- * version: 0.1.0
+ * version: 0.1.1
  * https://github.com/Labelsuisse/jquery.slideshow
  * @2014
  */
@@ -11,38 +11,43 @@
 $.fn.slideshow = function(opts){
 
     var defaults = {
-            markerCurrentBgColor: 'rgb(3, 106, 191)',
+            markerCurrentBgColor: 'rgb(3, 150, 191)',
             resizeImage : false,
-            contentCss : {
+            transitionAuto: 3000,
+            fadeOutSpeed: 'slow',
+            fadeInSpeed: 'slow',
+            btnDefault: false,
+            containerStyle : {
                 position: "relative",
                 border: "3px solid #F2F2F2"
             },
 
-            titleCss : {
+            titleStyle : {
                 position: 'absolute',
                 textAlign: 'center',
                 color: '#fff',
                 background: 'rgba(0, 0, 0, .3)',
-                bottom: 10,
+                bottom: 20,
                 height: 30,
-                width: '100%'
+                width: '100%',
+                paddingTop: 5
             },
 
-            imageCss : {
+            imageStyle : {
                 textAlign: 'center',
-                color: '#fff',
+                backgroundColor: '#fff',
             },
 
-            markerCss : {
+            markerStyle : {
                 position: "absolute",
                 right: 5,
-                bottom: 7,
+                bottom: 17,
                 zIndex: 10,
             },
 
-            pointCss : {
+            pointStyle : {
                 display: 'inline-block',
-                margin: '0px 1px',
+                margin: '0px 2px',
                 borderRadius: 5,
                 height: 10,
                 width: 10,
@@ -50,167 +55,210 @@ $.fn.slideshow = function(opts){
                 cursor: 'pointer'
             },
 
-            btnCss : {
-                    width: 30,
-                    height: 20,
+            btnStyle : {
+                    width: 20,
+                    height: 50,
+                    borderRadius: 3,
                     position: "absolute",
                     background: "rgba(150, 150, 150, .7)",
                     color: "#fff",
                     cursor: "pointer",
                     textAlign: "center",
-                    fontSize: "1em",
+                    fontSize: "1.3em",
                     zIndex: 100
             }
         }
       , ulCss = {
             padding: 0, 
             margin: 0,
-            listStyle: 'none'
+            listStyle: 'none',
         }
       , liCss = {
             background: '#fff',
             position: 'absolute',
-            width: 532
-      }
+            width: '100%'
+        }
+      , btnDefaultStyle = {
+            width: 40,
+            position: "absolute",
+            background: "rgba(150, 150, 150, .3)",
+            color: "#fff",
+            cursor: "pointer",
+            textAlign: "center",
+            fontSize: "1.3em",
+            zIndex: 100
+        }
       , content = $(this)
-      , width = content.width()
-      , height = content.height()
+      , width, height
+      , childs = content.children()
+      , ul
       , viewCurrent = 'view-current'
       , markerCurrent = 'marker-current'
       , timer
-      , marker;
+      , marker
 
+      , create = function (elem) {
+            return $(document.createElement(elem));
+        }
+
+      , getIndexById = function (_elm){
+            var x = _elm.attr('id').split('-');
+            return x[x.length -1];
+        }
+
+      , setClass = function (i){
+            var spans = marker.find('span')
+              , current;
+            spans.css('background', opts.pointStyle.background);
+            if(i){
+                current = $('#marker-point-' + i);
+            }else{
+                current = spans.first();
+            }
+            current.css('background', opts.markerCurrentBgColor);
+        }
+      , resizeImage = function (img) {
+            if (opts.resizeImage) {
+                if (width > height) {
+                    // height prime
+                    img.height(height);
+                } else {
+                    // widht prime
+                    img.width(width);
+                }
+            }
+            return img;
+        }
+      , createBtn = function(){
+            var i, btnStyle
+              , clickLeft = function() {
+                    var current = $('.view-current').prev();
+                    var li = content.find('ul').find('li');
+                    clearInterval(timer);
+                    li.fadeOut(opts.fadeOutSpeed).removeClass(viewCurrent);
+                    if( current.length == 0 ){
+                        current = li.last();
+                    }
+                    current.fadeIn(opts.fadeInSpeed).addClass(viewCurrent);
+                    setClass(getIndexById(current));
+                }
+              , clickRight = function () {
+                    var current = $('.view-current').next();
+                    var li = content.find('ul').find('li');
+                    clearInterval(timer);
+                    li.fadeOut(opts.fadeOutSpeed).removeClass(viewCurrent);
+                    if( current.length == 0 ){
+                        current = li.first();
+                    }
+                    current.fadeIn(opts.fadeInSpeed).addClass(viewCurrent);
+                    setClass(getIndexById(current));
+                };
+
+            if (opts.btnDefault) {
+                btnStyle = btnDefaultStyle;
+                btnStyle.height = height;
+                btnStyle.lineHeight = height + "px";
+            } else {
+                btnStyle = opts.btnStyle;
+                btnStyle.top = ((content.height() - btnStyle.height) / 2);
+                btnStyle.lineHeight = btnStyle.height + "px"; 
+
+            }
+
+            for(i=0; i < 2; i++){
+                var btn = create('div');
+                if(i == 0){
+                    // Left
+                    if (!opts.btnDefault) {
+                        btnStyle.left = -10;
+                    } else {
+                        btnStyle.left = 0;
+                    }
+                    btn.text("<");
+                    btn.attr('id', 'slider-btn-left');
+                    btn.on('click', clickLeft);
+                } else {
+                    // Right
+                    if (!opts.btnDefault) {
+                        btnStyle.right = -10;
+                    } else {
+                        btnStyle.right = 0;
+                    }
+                    btn.text(">");
+                    btn.attr('id', 'slider-btn-right');
+                    btn.on('click', clickRight);
+                    delete btnStyle.left;
+                }
+                btn.css(btnStyle);
+                content.append(btn);
+            }
+
+        };
+
+    /* Start Contruction */
     opts = $.extend(true, defaults, opts);
     
-    function create (elem) {
-        return $(document.createElement(elem));
-    }
+    content.css(opts.containerStyle);
+    width = content.width();
+    height = content.height();
 
-    function getIndexById(_elm){
-        return _elm.attr('id')[_elm.attr('id').length -1];
-    }
-
-    function setClass(i){
-        var spans = marker.find('span')
-          , current;
-        spans.css('background', opts.pointCss.background);
-        if(i){
-            current = $('#marker-point-' + i);
-        }else{
-            current = spans.first();
-        }
-        current.css('background', opts.markerCurrentBgColor);
-    }
-    function resizeImage (img) {
-        if (opts.resizeImage) {
-            if (width > height) {
-                // height prime
-                img.height(height);
-            } else {
-                // widht prime
-                img.width(width);
-            }    
-        }
-        
-        return img;
-    }
     /* create Marker */
-    marker = create('div').css(opts.markerCss);
+    marker = create('div').css(opts.markerStyle);
     content.append(marker);
 
-    /**** Style CSS ****/
-    /* Content */
-    content.css(opts.contentCss);
+    
+    /* create ul */
+    ul = create('ul');
+    ul.css(ulCss);
+    content.append(ul);
 
-    /*** END CSS ***/
-    // Mise en forme des elements
-    content.find('ul').css(ulCss);
-    $.each(content.find('li'), function(k, v){
-        var v = $(v).attr({'id':'slide-image-' + k}).css(liCss);
+    $.each(childs, function(k, v){
+        var li, divTitle, divImg, spanMarker;
+        v = $(v);
 
-        var divTitle = create('div').css(opts.titleCss).text(resizeImage(v.find('img')).attr('title'));
-        var divImg = create('div').css(opts.imageCss);
+        li = create('li');
+        li.css(liCss);
+        li.attr('id', 'slide-image-' + k).css(liCss);
+        ul.append(li);
 
-        v.append(divTitle)
-            .append(divImg.append(v.find('a')));
 
-        var spanMarker = create('span').css(opts.pointCss).attr('id', "marker-point-" + k);
+        divTitle = create('div').css(opts.titleStyle).text(resizeImage(v.find('img')).attr('title'));
+        divImg = create('div').css(opts.imageStyle).append(v);
+
+        li.append(divTitle)
+            .append(divImg);
+
+        spanMarker = create('span').css(opts.pointStyle).attr('id', "marker-point-" + k);
 
         if( k == 0 ){
             spanMarker.css('background', opts.markerCurrentBgColor);
-            v.addClass(viewCurrent);
+            li.addClass(viewCurrent);
         } else {
-            v.css({'display': 'none'});
+            li.css({'display': 'none'});
         }
 
         marker.append(spanMarker);
-
     });
-    var createBtn = function(){
-        var i
-          , clickLeft = function() {
-                var current = $('.view-current').prev();
-                var li = content.find('ul').find('li');
-                clearInterval(timer);
-                li.fadeOut().removeClass(viewCurrent);
-                if( current.length == 0 ){
-                    current = li.last();
-                }
-                current.fadeIn().addClass(viewCurrent);
-                setClass(getIndexById(current));
-            }
-          , clickRight = function () {
-                var current = $('.view-current').next();
-                var li = content.find('ul').find('li');
-                clearInterval(timer);
-                li.fadeOut().removeClass(viewCurrent);
-                if( current.length == 0 ){
-                    current = li.first();
-                }
-                current.fadeIn().addClass(viewCurrent);
-                setClass(getIndexById(current));
-            };
-
-        opts.btnCss.top = ((content.height() - opts.btnCss.height) / 2);
-        opts.btnCss.lineHeight = opts.btnCss.height + "px"; 
-
-        for(i=0; i < 2; i++){
-            var btn = create('div');
-            if(i == 0){
-                // Left
-                opts.btnCss.left = -10;
-                btn.text("<");
-                btn.attr('id', 'slider-btn-left');
-                btn.on('click', clickLeft);
-            } else {
-                // Right
-                opts.btnCss.right = -10;
-                btn.text(">");
-                btn.attr('id', 'slider-btn-right');
-                btn.on('click', clickRight);
-                delete opts.btnCss.left;
-            }
-            btn.css(opts.btnCss);
-            content.append(btn);
-        }
-
-    }();
+    
+    createBtn();
 
     marker.find('span').on('click', function(){
-        var n = getIndexById($(this));
-        var li = content.find('ul').find('li');
-        var elm = $('#slide-image-'+n);
-        li.fadeOut().removeClass(viewCurrent);
-        elm.fadeIn().addClass(viewCurrent);
+        var n = getIndexById($(this))
+          , li = content.find('li')
+          , elm = $('#slide-image-'+n);
+
+        li.fadeOut(opts.fadeOutSpeed).removeClass(viewCurrent);
+        elm.fadeIn(opts.fadeInSpeed).addClass(viewCurrent);
         setClass(n);
         clearInterval(timer);
     });
 
     // Slide automatique
     timer = setInterval(function(){
-        var li = content.find('ul').find('li');
-        var current = $('.view-current');
-        li.fadeOut().removeClass(viewCurrent);
+        var li = content.find('li')
+          , current = $('.view-current');
+
+        li.fadeOut(opts.fadeOutSpeed).removeClass(viewCurrent);
 
         if(current.next().length == 0){
             current = li.eq(0).fadeIn().addClass(viewCurrent);
@@ -219,12 +267,8 @@ $.fn.slideshow = function(opts){
         }
         setClass(getIndexById(current));
     
-    }, 3000)
+    }, opts.transitionAuto);
     
 }
-/**
- * Add slideshon in jquery
- * @type {[type]}
- */
 
 })(window.jQuery);
