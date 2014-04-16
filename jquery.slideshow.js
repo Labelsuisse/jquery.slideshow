@@ -16,7 +16,7 @@ $.fn.slideshow = function(opts){
             transitionAuto: 3000,
             fadeOutSpeed: 'slow',
             fadeInSpeed: 'slow',
-            btnDefault: false,
+            btnDefault: true,
             containerStyle : {
                 position: "relative",
                 border: "3px solid #F2F2F2"
@@ -81,7 +81,8 @@ $.fn.slideshow = function(opts){
       , btnDefaultStyle = {
             width: 40,
             position: "absolute",
-            background: "rgba(150, 150, 150, .3)",
+            background: "#fff",
+            // background: "rgba(150, 150, 150, .3)",
             color: "#fff",
             cursor: "pointer",
             textAlign: "center",
@@ -156,8 +157,8 @@ $.fn.slideshow = function(opts){
 
             if (opts.btnDefault) {
                 btnStyle = btnDefaultStyle;
-                btnStyle.height = height;
-                btnStyle.lineHeight = height + "px";
+                btnStyle.height = height - opts.titleStyle.height - opts.titleStyle.bottom - 5;
+                btnStyle.lineHeight = btnStyle.height + "px";
             } else {
                 btnStyle = opts.btnStyle;
                 btnStyle.top = ((content.height() - btnStyle.height) / 2);
@@ -190,6 +191,16 @@ $.fn.slideshow = function(opts){
                     delete btnStyle.left;
                 }
                 btn.css(btnStyle);
+
+                if (opts.btnDefault){
+                    btn.on('mouseover', function () {
+                        $(this).css({background: "rgba(150, 150, 150, .3)", color: "rgb(3, 150, 191)"});
+                    }).on('mouseout', function () {
+                        $(this).css({
+                            background: btnDefaultStyle.background,
+                            color: btnDefaultStyle.color});
+                    });
+                }
                 content.append(btn);
             }
 
