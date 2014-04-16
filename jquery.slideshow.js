@@ -58,6 +58,7 @@ $.fn.slideshow = function(opts){
                     color: "#fff",
                     cursor: "pointer",
                     textAlign: "center",
+                    fontSize: "1em",
                     zIndex: 100
             }
         }
@@ -80,7 +81,6 @@ $.fn.slideshow = function(opts){
       , marker;
 
     opts = $.extend(true, defaults, opts);
-    console.log(height);
     
     function create (elem) {
         return $(document.createElement(elem));
@@ -172,6 +172,7 @@ $.fn.slideshow = function(opts){
             };
 
         opts.btnCss.top = ((content.height() - opts.btnCss.height) / 2);
+        opts.btnCss.lineHeight = opts.btnCss.height + "px"; 
 
         for(i=0; i < 2; i++){
             var btn = create('div');
