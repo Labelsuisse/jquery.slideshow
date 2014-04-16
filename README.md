@@ -27,6 +27,10 @@ Default options:
 {
     markerCurrentBgColor: 'rgb(3, 106, 191)',
     resizeImage : false,
+    transitionAuto: 3000,
+    fadeOutSpeed: 'slow',
+    fadeInSpeed: 'slow',
+    btnDefault: false,
     containerStyle : {
         position: "relative",
         border: "3px solid #F2F2F2"
