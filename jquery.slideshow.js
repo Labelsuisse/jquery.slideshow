@@ -30,7 +30,6 @@ $.fn.slideshow = function(opts){
             imageCss : {
                 textAlign: 'center',
                 color: '#fff',
-                // fontSize: 14
             },
 
             markerCss : {
