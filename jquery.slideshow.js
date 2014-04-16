@@ -2,6 +2,7 @@
  * Plugin Simpe Slide Show for jquery
  * Author: Labelsuisse
  * version: 0.1.0
+ * https://github.com/Labelsuisse/jquery.slideshow
  * @2014
  */
 
