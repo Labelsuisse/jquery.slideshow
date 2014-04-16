@@ -12,9 +12,9 @@ Using:
 ```
 <div id="slideshow">
     <ul>
-        <li><a href=""><img src="" alt=""></a></li>
-        <li><a href=""><img src="" alt=""></a></li>
-        <li><a href=""><img src="" alt=""></a></li>
+        <li><a href=""><img src="" alt="" title=""></a></li>
+        <li><a href=""><img src="" alt="" title=""></a></li>
+        <li><a href=""><img src="" alt="" title=""></a></li>
     </ul>
 </div>
 <script>
