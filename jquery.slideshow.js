@@ -80,6 +80,7 @@ $.fn.slideshow = function(opts){
         }
       , btnDefaultStyle = {
             width: 40,
+            top: 5,
             position: "absolute",
             background: "#fff",
             // background: "rgba(150, 150, 150, .3)",
@@ -157,7 +158,7 @@ $.fn.slideshow = function(opts){
 
             if (opts.btnDefault) {
                 btnStyle = btnDefaultStyle;
-                btnStyle.height = height - opts.titleStyle.height - opts.titleStyle.bottom - 5;
+                btnStyle.height = height - opts.titleStyle.height - opts.titleStyle.bottom - 10;
                 btnStyle.lineHeight = btnStyle.height + "px";
             } else {
                 btnStyle = opts.btnStyle;
