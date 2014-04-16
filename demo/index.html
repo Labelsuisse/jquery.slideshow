@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Slideshow jQuery</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="../jquery.slideshow.js"></script>
+</head>
+<body>
+    <div id="slideshow">
+        <a href="#"><img src="images/image1.jpg" alt="1" title="Une première image"></a>
+        <a href="#"><img src="images/image2.jpg" alt="2" title="Une deuxième image"></a>
+        <a href="#"><img src="images/image3.jpg" alt="3" title="Une troisième image"></a>
+    </div>
+    <script>
+        $(function () {
+            $('#slideshow').slideshow({
+                resizeImage: true, 
+                containerStyle : {
+                    height: 400,
+                    width: 800
+                }
+            });
+        })
+    </script>
+</body>
+</html>
