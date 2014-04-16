@@ -1,19 +1,27 @@
+/**
+ * Plugin Simpe Slide Show for jquery
+ * Author: Labelsuisse
+ * version: 0.1.0
+ * @2014
+ */
+
 (function ($){
 
-function myslider(opts){
+$.fn.slideshow = function(opts){
 
     var defaults = {
-            markerCurrentColor: '#085f3f',
+            markerCurrentBgColor: 'rgb(3, 106, 191)',
+            resizeImage : false,
             contentCss : {
                 position: "relative",
-                border: "3px solid #F2F2F2" //o
+                border: "3px solid #F2F2F2"
             },
 
             titleCss : {
                 position: 'absolute',
                 textAlign: 'center',
                 color: '#fff',
-                backgroundColor: 'rgba(0, 0, 0, .3)',
+                background: 'rgba(0, 0, 0, .3)',
                 bottom: 10,
                 height: 30,
                 width: '100%'
@@ -65,13 +73,14 @@ function myslider(opts){
       }
       , content = $(this)
       , width = content.width()
+      , height = content.height()
       , viewCurrent = 'view-current'
       , markerCurrent = 'marker-current'
       , timer
       , marker;
 
-    opts = $.extend(defaults, opts);
-
+    opts = $.extend(true, defaults, opts);
+    console.log(height);
     
     function create (elem) {
         return $(document.createElement(elem));
@@ -90,9 +99,21 @@ function myslider(opts){
         }else{
             current = spans.first();
         }
-        current.css('background', opts.markerCurrentColor);
+        current.css('background', opts.markerCurrentBgColor);
     }
-
+    function resizeImage (img) {
+        if (opts.resizeImage) {
+            if (width > height) {
+                // height prime
+                img.height(height);
+            } else {
+                // widht prime
+                img.width(width);
+            }    
+        }
+        
+        return img;
+    }
     /* create Marker */
     marker = create('div').css(opts.markerCss);
     content.append(marker);
@@ -107,7 +128,7 @@ function myslider(opts){
     $.each(content.find('li'), function(k, v){
         var v = $(v).attr({'id':'slide-image-' + k}).css(liCss);
 
-        var divTitle = create('div').css(opts.titleCss).text(v.find('img').attr('title'));
+        var divTitle = create('div').css(opts.titleCss).text(resizeImage(v.find('img')).attr('title'));
         var divImg = create('div').css(opts.imageCss);
 
         v.append(divTitle)
@@ -116,7 +137,7 @@ function myslider(opts){
         var spanMarker = create('span').css(opts.pointCss).attr('id', "marker-point-" + k);
 
         if( k == 0 ){
-            spanMarker.css('background', opts.markerCurrentColor);
+            spanMarker.css('background', opts.markerCurrentBgColor);
             v.addClass(viewCurrent);
         } else {
             v.css({'display': 'none'});
@@ -195,12 +216,14 @@ function myslider(opts){
         }else{
             current = current.next().fadeIn().addClass(viewCurrent);
         }
-        var n = getIndexById(current);
-        setClass(n);
+        setClass(getIndexById(current));
     
     }, 3000)
     
 }
+/**
+ * Add slideshon in jquery
+ * @type {[type]}
+ */
 
-$.fn.sslide = myslider;
 })(window.jQuery);
