@@ -67,7 +67,7 @@ $.fn.slideshow = function(opts){
                 paddingTop: 5
             },
 
-            /* Duration of transition for setInterval */
+            /* Duration of transition for Start auto */
             transitionAuto: 3000,
 
             /* Automatic resize images adaptable of content */
@@ -102,7 +102,8 @@ $.fn.slideshow = function(opts){
       , markerCurrent = 'marker-current'
       , timer
       , marker
-      , btnDefault = typeof opts.btnStyle === 'undefined'
+      , btnDefault = (typeof opts.btnStyle === 'undefined') && 
+                        (typeof opts.btnStyleLeft === 'undefined') && (typeof opts.btnStyleRight === 'undefined')
 
       , create = function (elem) {
             return $(document.createElement(elem));
@@ -164,6 +165,8 @@ $.fn.slideshow = function(opts){
                     for(var key in styles) {
                         obj[key] = styles[key];
                     }
+                    btnStyle.top = ((content.height() - btnStyle.height) / 2);
+                    btnStyle.lineHeight = btnStyle.height + "px"; 
               }
 
             if (btnDefault) {
@@ -174,7 +177,6 @@ $.fn.slideshow = function(opts){
                 btnStyle = opts.btnStyle;
                 btnStyle.top = ((content.height() - btnStyle.height) / 2);
                 btnStyle.lineHeight = btnStyle.height + "px"; 
-
             }
 
             for(i=0; i < 2; i++){
@@ -186,7 +188,6 @@ $.fn.slideshow = function(opts){
                     if (btnDefault) {
                         btnStyle.left = 0;
                     } else {
-                        // btnStyle.left = -10;
                         applyStyle(btnStyle, opts.btnStyleLeft)
                         
                     }
@@ -198,7 +199,6 @@ $.fn.slideshow = function(opts){
                     if (btnDefault) {
                         btnStyle.right = 0;
                     } else {
-                        // btnStyle.right = -10;
                         applyStyle(btnStyle, opts.btnStyleRight)
                     }
                     // btn.text(">");
