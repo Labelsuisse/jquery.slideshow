@@ -30,29 +30,29 @@ Or using with options:
     <a href="#"><img src="images/image3.jpg" alt="3" title="Une troisième image"></a>
 </div>
 <script>
-    $(function () {
-        $('#slideshow').slideshow({
-                resizeImage: true, 
-                containerStyle : {
-                    height: 400,
-                    width: 800
-                },
-                btnStyle : {
-                    width: 20,
-                    height: 50,
-                    borderRadius: 3,
-                    position: "absolute",
-                    background: "rgba(150, 150, 150, .7)",
-                    color: "#fff",
-                    cursor: "pointer",
-                    textAlign: "center",
-                    fontSize: "1.3em",
-                    zIndex: 100
-                },
-                btnStyleLeft: {left: -10},
-                btnStyleRight: {right: -10}
-            });
-    });
+$(function () {
+    $('#slideshow').slideshow({
+            resizeImage: true, 
+            containerStyle : {
+                height: 400,
+                width: 800
+            },
+            btnStyle : {
+                width: 20,
+                height: 50,
+                borderRadius: 3,
+                position: "absolute",
+                background: "rgba(150, 150, 150, .7)",
+                color: "#fff",
+                cursor: "pointer",
+                textAlign: "center",
+                fontSize: "1.3em",
+                zIndex: 100
+            },
+            btnStyleLeft: {left: -10},
+            btnStyleRight: {right: -10}
+        });
+});
 </script>
 ```
 Options:
