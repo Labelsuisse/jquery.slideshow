@@ -8,6 +8,24 @@
 
 (function ($){
 
+$.fn.nextOrFirst = function(elm) {
+    var that = $(this);
+    if (that.next().length) {
+        return that.next();
+    } else {
+        return that.parent().find(elm).first();
+    }
+}
+
+$.fn.prevOrLast = function (elm) {
+    var that = $(this);
+    if (that.prev().length) {
+        return that.prev();
+    } else {
+        return that.parent().find(elm).last();
+    }
+}
+
 $.fn.slideshow = function(opts){
 
     var defaults = {
@@ -20,7 +38,7 @@ $.fn.slideshow = function(opts){
             /* Style for container of images */
             containerStyle : {
                 position: "relative",
-                border: "3px solid #F2F2F2"
+                border: "3px solid #F2F2F2",
             },
 
             /* Transition */
@@ -31,13 +49,14 @@ $.fn.slideshow = function(opts){
             imageStyle : {
                 textAlign: 'center',
                 backgroundColor: '#fff',
+                // position: 'absolute'
             },
 
             /* Style for container marker */
             markerStyle : {
                 position: "absolute",
                 right: 5,
-                bottom: 17,
+                bottom: 19,
                 zIndex: 10,
             },
 
@@ -80,19 +99,24 @@ $.fn.slideshow = function(opts){
         }
       , liCss = {
             background: '#fff',
-            position: 'absolute',
             width: '100%'
         }
       , btnDefaultStyle = {
             width: 50,
             top: 5,
             position: "absolute",
-            background: "#fff",
-            color: "#fff",
+            display: 'none',
+            // background: "#fff",
+            color: "rgb(3, 150, 191)",
             cursor: "pointer",
             textAlign: "center",
             fontSize: "3em",
             zIndex: 100
+        }
+      , contentStyle = {
+            overflow: "hidden",
+            height: "inherit",
+            width: "inherit",
         }
       , content = $(this)
       , width, height
@@ -125,41 +149,53 @@ $.fn.slideshow = function(opts){
             }
             current.css('background', opts.markerCurrentBgColor);
         }
+      , ratio = function (name, img) {
+            if (name === 'width') {
+                return (img.height() / height);
+            } else if (name === 'height') {
+                return (img.width() / width);
+            }
+        }
       , resizeImage = function (img) {
             if (opts.resizeImage) {
                 if (width > height) {
-                    // height prime
-                    img.height(height);
+                    if ((img.width() / ratio('width',img)) > width) {
+                        img.width(width);
+                    } else {
+                        img.height(height);
+                    }
+
                 } else {
-                    // widht prime
-                    img.width(width);
+                    // width prime
+                    if ((img.height() / ratio('height',img)) > height) {
+                        img.height(height);
+                    } else {
+                        img.width(width);
+                    }
                 }
             }
             return img;
         }
+      , changeImage = function (direction, stopTimer) {
+            $('.view-current')
+                .removeClass(viewCurrent)
+                .fadeOut(opts.fadeOutSpeed, function () {
+                    var newCurrent = $(this)[direction]('li')
+                        .fadeIn(opts.fadeInSpeed)
+                        .addClass(viewCurrent);
+                    setClass(getIndexById(newCurrent));
+                })
+            if (stopTimer) {
+                clearInterval(timer);
+            }
+        }
       , createBtn = function(){
             var i, btnStyle
               , clickLeft = function() {
-                    var current = $('.view-current').prev();
-                    var li = content.find('ul').find('li');
-                    clearInterval(timer);
-                    li.fadeOut(opts.fadeOutSpeed).removeClass(viewCurrent);
-                    if( current.length == 0 ){
-                        current = li.last();
-                    }
-                    current.fadeIn(opts.fadeInSpeed).addClass(viewCurrent);
-                    setClass(getIndexById(current));
+                    changeImage('prevOrLast', true);
                 }
               , clickRight = function () {
-                    var current = $('.view-current').next();
-                    var li = content.find('ul').find('li');
-                    clearInterval(timer);
-                    li.fadeOut(opts.fadeOutSpeed).removeClass(viewCurrent);
-                    if( current.length == 0 ){
-                        current = li.first();
-                    }
-                    current.fadeIn(opts.fadeInSpeed).addClass(viewCurrent);
-                    setClass(getIndexById(current));
+                    changeImage('nextOrFirst', true);
                 }
               , applyStyle = function (obj, styles) {
                     for(var key in styles) {
@@ -201,7 +237,7 @@ $.fn.slideshow = function(opts){
                     } else {
                         applyStyle(btnStyle, opts.btnStyleRight)
                     }
-                    // btn.text(">");
+
                     text = ">";
                     btn.attr('id', 'slider-btn-right');
                     btn.on('click', clickRight);
@@ -209,17 +245,36 @@ $.fn.slideshow = function(opts){
                 }
 
                 if (btnDefault){
-                    btn.on('mouseover', function () {
-                        $(this).css('color', 'rgb(3, 150, 191)');
-                    }).on('mouseout', function () {
-                        $(this).css('color', btnDefaultStyle.color);
-                    });
+                    moving(content, btnStyle.width);
                 }
                 btn.text(text);
                 btn.css(btnStyle);
                 content.append(btn);
             }
 
+        }
+      , moving = function (elm, width) {
+            var elm = $(elm)
+              , offset = elm.offset()
+              , left4 = offset.left + elm.width()
+              , center = width || (left4 / 2) / 2
+              , left1 = offset.left
+              , left2 = offset.left + center
+              , left3 = left4 - center
+              , oBottom = offset.top + elm.height();
+
+            elm.on('mousemove', function (e) {
+                if((e.clientX > left1 && e.clientX < left2) && (e.clientY > offset.top && e.clientY < oBottom)){
+                    elm.find('#slider-btn-left').show();
+                }else if((e.clientX > left3 && e.clientX < left4) && (e.clientY > offset.top && e.clientY < oBottom)){
+                    elm.find('#slider-btn-right').show();
+                }else{
+                    elm.find('#slider-btn-left').hide().end().find('#slider-btn-right').hide();
+                }
+
+            }).on('mouseout', function(){
+                elm.find('#slider-btn-left').hide().end().find('#slider-btn-right').hide();
+            });
         };
 
     /* Start Contruction */
@@ -243,8 +298,14 @@ $.fn.slideshow = function(opts){
         var li, divTitle, divImg, spanMarker;
         v = $(v);
 
+        if (width < height) {
+            console.log(height / ratio('height', v.find('img')));
+            opts.imageStyle.marginTop = 0;//height / ratio('height', v.find('img'));//(height / (v.find('img').width() / width));
+        }
+
         divTitle = create('div').css(opts.titleStyle).text(resizeImage(v.find('img')).attr('title'));
         divImg = create('div').css(opts.imageStyle).append(v);
+
 
         li = create('li')
                 .css(liCss)
@@ -268,29 +329,21 @@ $.fn.slideshow = function(opts){
 
     marker.find('span').on('click', function(){
         var n = getIndexById($(this));
+        
+        $('.view-current').removeClass(viewCurrent).fadeOut(opts.fadeOutSpeed, function () {
+            $('#slide-image-'+n).fadeIn(opts.fadeInSpeed).addClass(viewCurrent);
+            setClass(n);
 
-        content.find('li').fadeOut(opts.fadeOutSpeed).removeClass(viewCurrent);
-        $('#slide-image-'+n).fadeIn(opts.fadeInSpeed).addClass(viewCurrent);
-        setClass(n);
+        });
+
         clearInterval(timer);
     });
 
     // Slide automatique
     timer = setInterval(function(){
-        var li = content.find('li')
-          , current = $('.view-current');
-
-        li.fadeOut(opts.fadeOutSpeed).removeClass(viewCurrent);
-
-        if(current.next().length == 0){
-            current = li.eq(0).fadeIn().addClass(viewCurrent);
-        }else{
-            current = current.next().fadeIn().addClass(viewCurrent);
-        }
-        setClass(getIndexById(current));
-    
+        changeImage('nextOrFirst');
     }, opts.transitionAuto);
-    
+    content.append(create('div').css(contentStyle).append(content.children()));
 }
 
 })(window.jQuery);
