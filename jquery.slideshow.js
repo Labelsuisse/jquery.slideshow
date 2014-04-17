@@ -1,7 +1,7 @@
 /**
  * Plugin Simpe Slide Show for jquery
  * Author: Labelsuisse
- * version: 0.1.1
+ * version: 0.2.0
  * https://github.com/Labelsuisse/jquery.slideshow
  * @2014
  */
@@ -11,17 +11,51 @@
 $.fn.slideshow = function(opts){
 
     var defaults = {
-            markerCurrentBgColor: 'rgb(3, 150, 191)',
-            resizeImage : false,
-            transitionAuto: 3000,
-            fadeOutSpeed: 'slow',
-            fadeInSpeed: 'slow',
-            btnDefault: true,
+
+            /* Style for button */
+            btnStyle: {},
+            btnStyleLeft: {},
+            btnStyleRight: {},
+
+            /* Style for container of images */
             containerStyle : {
                 position: "relative",
                 border: "3px solid #F2F2F2"
             },
 
+            /* Transition */
+            fadeOutSpeed: 'slow',
+            fadeInSpeed: 'slow',
+
+            /* Style for container image */
+            imageStyle : {
+                textAlign: 'center',
+                backgroundColor: '#fff',
+            },
+
+            /* Style for container marker */
+            markerStyle : {
+                position: "absolute",
+                right: 5,
+                bottom: 17,
+                zIndex: 10,
+            },
+
+            /* Background color marker for current image */
+            markerCurrentBgColor: 'rgb(3, 150, 191)',
+
+            /* Style for marker point */
+            pointStyle : {
+                display: 'inline-block',
+                margin: '0px 2px',
+                borderRadius: 5,
+                height: 10,
+                width: 10,
+                background: '#fff',
+                cursor: 'pointer'
+            },
+
+            /* Style for container title */
             titleStyle : {
                 position: 'absolute',
                 textAlign: 'center',
@@ -33,40 +67,11 @@ $.fn.slideshow = function(opts){
                 paddingTop: 5
             },
 
-            imageStyle : {
-                textAlign: 'center',
-                backgroundColor: '#fff',
-            },
+            /* Duration of transition for setInterval */
+            transitionAuto: 3000,
 
-            markerStyle : {
-                position: "absolute",
-                right: 5,
-                bottom: 17,
-                zIndex: 10,
-            },
-
-            pointStyle : {
-                display: 'inline-block',
-                margin: '0px 2px',
-                borderRadius: 5,
-                height: 10,
-                width: 10,
-                background: '#fff',
-                cursor: 'pointer'
-            },
-
-            btnStyle : {
-                    width: 20,
-                    height: 50,
-                    borderRadius: 3,
-                    position: "absolute",
-                    background: "rgba(150, 150, 150, .7)",
-                    color: "#fff",
-                    cursor: "pointer",
-                    textAlign: "center",
-                    fontSize: "1.3em",
-                    zIndex: 100
-            }
+            /* Automatic resize images adaptable of content */
+            resizeImage : false
         }
       , ulCss = {
             padding: 0, 
@@ -79,15 +84,14 @@ $.fn.slideshow = function(opts){
             width: '100%'
         }
       , btnDefaultStyle = {
-            width: 40,
+            width: 50,
             top: 5,
             position: "absolute",
             background: "#fff",
-            // background: "rgba(150, 150, 150, .3)",
             color: "#fff",
             cursor: "pointer",
             textAlign: "center",
-            fontSize: "1.3em",
+            fontSize: "3em",
             zIndex: 100
         }
       , content = $(this)
@@ -98,6 +102,7 @@ $.fn.slideshow = function(opts){
       , markerCurrent = 'marker-current'
       , timer
       , marker
+      , btnDefault = typeof opts.btnStyle === 'undefined'
 
       , create = function (elem) {
             return $(document.createElement(elem));
@@ -154,9 +159,14 @@ $.fn.slideshow = function(opts){
                     }
                     current.fadeIn(opts.fadeInSpeed).addClass(viewCurrent);
                     setClass(getIndexById(current));
-                };
+                }
+              , applyStyle = function (obj, styles) {
+                    for(var key in styles) {
+                        obj[key] = styles[key];
+                    }
+              }
 
-            if (opts.btnDefault) {
+            if (btnDefault) {
                 btnStyle = btnDefaultStyle;
                 btnStyle.height = height - opts.titleStyle.height - opts.titleStyle.bottom - 10;
                 btnStyle.lineHeight = btnStyle.height + "px";
@@ -168,40 +178,45 @@ $.fn.slideshow = function(opts){
             }
 
             for(i=0; i < 2; i++){
-                var btn = create('div');
+                var btn = create('div')
+                  , text;
+                
                 if(i == 0){
                     // Left
-                    if (!opts.btnDefault) {
-                        btnStyle.left = -10;
-                    } else {
+                    if (btnDefault) {
                         btnStyle.left = 0;
+                    } else {
+                        // btnStyle.left = -10;
+                        applyStyle(btnStyle, opts.btnStyleLeft)
+                        
                     }
-                    btn.text("<");
+                    text = "<";
                     btn.attr('id', 'slider-btn-left');
                     btn.on('click', clickLeft);
                 } else {
                     // Right
-                    if (!opts.btnDefault) {
-                        btnStyle.right = -10;
-                    } else {
+                    if (btnDefault) {
                         btnStyle.right = 0;
+                    } else {
+                        // btnStyle.right = -10;
+                        applyStyle(btnStyle, opts.btnStyleRight)
                     }
-                    btn.text(">");
+                    // btn.text(">");
+                    text = ">";
                     btn.attr('id', 'slider-btn-right');
                     btn.on('click', clickRight);
                     delete btnStyle.left;
                 }
-                btn.css(btnStyle);
 
-                if (opts.btnDefault){
+                if (btnDefault){
                     btn.on('mouseover', function () {
-                        $(this).css({background: "rgba(150, 150, 150, .3)", color: "rgb(3, 150, 191)"});
+                        $(this).css('color', 'rgb(3, 150, 191)');
                     }).on('mouseout', function () {
-                        $(this).css({
-                            background: btnDefaultStyle.background,
-                            color: btnDefaultStyle.color});
+                        $(this).css('color', btnDefaultStyle.color);
                     });
                 }
+                btn.text(text);
+                btn.css(btnStyle);
                 content.append(btn);
             }
 
@@ -220,25 +235,23 @@ $.fn.slideshow = function(opts){
 
     
     /* create ul */
-    ul = create('ul');
-    ul.css(ulCss);
-    content.append(ul);
+    ul = create('ul')
+            .css(ulCss)
+            .appendTo(content);
 
     $.each(childs, function(k, v){
         var li, divTitle, divImg, spanMarker;
         v = $(v);
 
-        li = create('li');
-        li.css(liCss);
-        li.attr('id', 'slide-image-' + k).css(liCss);
-        ul.append(li);
-
-
         divTitle = create('div').css(opts.titleStyle).text(resizeImage(v.find('img')).attr('title'));
         divImg = create('div').css(opts.imageStyle).append(v);
 
-        li.append(divTitle)
-            .append(divImg);
+        li = create('li')
+                .css(liCss)
+                .attr('id', 'slide-image-' + k)
+                .append(divTitle)
+                .append(divImg)
+                .appendTo(ul);
 
         spanMarker = create('span').css(opts.pointStyle).attr('id', "marker-point-" + k);
 
@@ -248,19 +261,16 @@ $.fn.slideshow = function(opts){
         } else {
             li.css({'display': 'none'});
         }
-
         marker.append(spanMarker);
     });
     
     createBtn();
 
     marker.find('span').on('click', function(){
-        var n = getIndexById($(this))
-          , li = content.find('li')
-          , elm = $('#slide-image-'+n);
+        var n = getIndexById($(this));
 
-        li.fadeOut(opts.fadeOutSpeed).removeClass(viewCurrent);
-        elm.fadeIn(opts.fadeInSpeed).addClass(viewCurrent);
+        content.find('li').fadeOut(opts.fadeOutSpeed).removeClass(viewCurrent);
+        $('#slide-image-'+n).fadeIn(opts.fadeInSpeed).addClass(viewCurrent);
         setClass(n);
         clearInterval(timer);
     });
