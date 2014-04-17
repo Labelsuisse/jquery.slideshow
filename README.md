@@ -3,12 +3,12 @@ jquery-slideshow
 
 plugin slideshow for jQuery
 
-Syntax:
+## Syntax
 ```javascript
 $('#content').slideshow([options{}]);
 ```
 
-Using:
+## Using
 ```html
 <div id="slideshow">
     <a href="#"><img src="images/image1.jpg" alt="1" title="Une première image"></a>
@@ -22,7 +22,7 @@ Using:
 </script>
 ```
 
-Or using with options:
+### Or using with options
 ```html
 <div id="slideshow">
     <a href="#"><img src="images/image1.jpg" alt="1" title="Une première image"></a>
@@ -55,7 +55,8 @@ $(function () {
 });
 </script>
 ```
-Options:
+
+## Options
 ```javascript
 {
     /* Style for button */
@@ -93,12 +94,14 @@ Options:
 }
 ```
 
-Screenshot:
+## Screenshot
 ![Screenshot](/screenshot.png "Screenshot")
 
-enjoy!!!
+## Authors
+[Labelsuiss](https://github.com/Labelsuisse/jquery.slideshow)
 
-Versions:
-0.2.0 : ability to create his style of button.
-0.1.1 : Change style.
-0.1.0 : Start app.
+## Versions
+
+    0.2.0 : ability to create his style of button.
+    0.1.1 : Change style.
+    0.1.0 : Start app.
