@@ -22,65 +22,41 @@ Using:
 </script>
 ```
 
-Default options:
+Options:
 ```
 {
-    markerCurrentBgColor: 'rgb(3, 106, 191)',
-    resizeImage : false,
-    transitionAuto: 3000,
+    /* Style for button */
+    btnStyle: {},
+    btnStyleLeft: {},
+    btnStyleRight: {},
+
+    /* Style for container of images */
+    containerStyle : {},
+
+    /* Transition */
     fadeOutSpeed: 'slow',
     fadeInSpeed: 'slow',
-    btnDefault: false,
-    containerStyle : {
-        position: "relative",
-        border: "3px solid #F2F2F2"
-    },
 
-    titleStyle : {
-        position: 'absolute',
-        textAlign: 'center',
-        color: '#fff',
-        background: 'rgba(0, 0, 0, .3)',
-        bottom: 10,
-        height: 30,
-        width: '100%',
-        paddingTop: 5
-    },
+    /* Style for container image */
+    imageStyle : {},
 
-    imageStyle : {
-        textAlign: 'center',
-        backgroundColor: '#fff',
-    },
+    /* Style for container marker */
+    markerStyle : {},
 
-    markerStyle : {
-        position: "absolute",
-        right: 5,
-        bottom: 7,
-        zIndex: 10,
-    },
+    /* Background color marker for current image */
+    markerCurrentBgColor: 'rgb(3, 150, 191)',
 
-    pointStyle : {
-        display: 'inline-block',
-        margin: '0px 1px',
-        borderRadius: 5,
-        height: 10,
-        width: 10,
-        background: '#fff',
-        cursor: 'pointer'
-    },
+    /* Style for marker point */
+    pointStyle : {},
 
-    btnStyle : {
-            width: 20,
-            height: 50,
-            borderRadius: 3,
-            position: "absolute",
-            background: "rgba(150, 150, 150, .7)",
-            color: "#fff",
-            cursor: "pointer",
-            textAlign: "center",
-            fontSize: "1.3em",
-            zIndex: 100
-    }
+    /* Style for container title */
+    titleStyle : {},
+
+    /* Duration of transition for Start auto */
+    transitionAuto: 3000,
+
+    /* Automatic resize images adaptable of content */
+    resizeImage : false
 }
 ```
 
