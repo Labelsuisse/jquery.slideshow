@@ -88,3 +88,8 @@ Screenshot:
 ![Screenshot](/screenshot.png "Screenshot")
 
 enjoy!!!
+
+Versions:
+0.2.0 : ability to create his style of button.
+0.1.1 : Change style.
+0.1.0 : Start app.
