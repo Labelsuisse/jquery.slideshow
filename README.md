@@ -98,7 +98,7 @@ $(function () {
 ![Screenshot](/screenshot.png "Screenshot")
 
 ## Authors
-[Labelsuiss](https://github.com/Labelsuisse)
+[Labelsuisse](https://github.com/Labelsuisse)
 
 ## Versions
 
