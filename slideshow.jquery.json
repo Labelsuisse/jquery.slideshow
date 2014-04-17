@@ -1,0 +1,27 @@
+{
+  "name": "slideshow",
+  "version": "0.2.0",
+  "title":  "jQuery Slideshow",
+  "description": "A simple slideshow",
+  "author": {
+    "name": "Labelsuisse",
+    "url": "https://github.com/Labelsuisse"
+  },
+  "maintainers": [
+    {
+      "name": "Labelsuisse",
+      "url": "https://github.com/Labelsuisse"
+    },
+  ],
+  "licenses": [
+    {
+        "type": "GPLv2",
+        "url": "http://www.example.com/licenses/gpl.html"
+    }
+  ],
+  "dependencies": {
+    "jquery": ">=1.8"
+  },
+  "homepage": "https://github.com/Labelsuisse/jquery.slideshow",
+  "docs": "https://github.com/Labelsuisse/jquery.slideshow#readme"
+}
