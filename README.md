@@ -98,7 +98,7 @@ $(function () {
 ![Screenshot](/screenshot.png "Screenshot")
 
 ## Authors
-[Labelsuiss](https://github.com/Labelsuisse/jquery.slideshow)
+[Labelsuiss](https://github.com/Labelsuisse)
 
 ## Versions
 
